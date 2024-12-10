@@ -32,3 +32,18 @@ fi # fi means reverse of if, indicating condition end
 cp mongo.repo /etc/yum.repos.d/mongo.repo &>> $LOGFILE
 
 VALIDATE $? "Copied MongoDB Repo"
+
+dnf install mongodb-org -y &>> $LOGFILE
+VALIDATE $? "installing mongodb"
+
+systemctl enable mongod &>> $LOGFILE
+VALIDATE $? "enabling mongodb"
+
+systemctl start mongod &>> $LOGFILE
+VALIDATE $? "starting mongodb"
+
+sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mongod.conf &>> $logfile
+VALIDATE $? "remote access to mongodb"
+
+systemctl restart mongod &>> logfile
+VALIDATE $? "restarting mongodb"
