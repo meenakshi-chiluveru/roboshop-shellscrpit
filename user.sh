@@ -64,3 +64,25 @@ VALIDATE $? "unzipping userapplication"
 
 npm install &>> LOGFILE
 VALIDATE $? "installing dependencies"
+
+cp /home/centos/roboshop-shellscript/user.service /etc/systemd/system/user.service &>> LOGFILE
+VALIDATE $? "copying user service to etc folder"
+
+systemctl daemon-reload  &>> LOGFILE
+VALIDATE $? "user deamon reload"
+
+systemctl enable catalogue &>> LOGFILE
+VALIDATE $? "enable user"
+
+systemctl start catalogue &>> LOGFILE
+VALIDATE $? "starting user"
+
+cp /home/centos/roboshop-shellscript/mongo.repo /etc/yum.repos.d/mongo.repo &>> LOGFILE
+VALIDATE $? "copying mongodb repo"
+
+dnf install mongodb-org-shell -y &>> LOGFILE
+VALIDATE $? "installing mongodb client"
+
+mongo --host $MONGODB_HOST </app/schema/catalogue.js  &>> LOGFILE
+VALIDATE $? "loading user data into mongodb"
+
