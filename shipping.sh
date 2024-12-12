@@ -30,3 +30,27 @@ else
 fi # fi means reverse of if, indicating condition end
 
 dnf install maven -y
+id roboshop
+if [ $? -ne 0 ]
+then
+  useradd roboshop
+  VALIDATE $? "creating roboshop user"
+else
+  echo -e "roboshop user already exist $Y skipping
+  $N"
+fi
+
+mkdir -p /app &>> LOGFILE
+VALIDATE $? "creating app directory"
+curl -L -o /tmp/shipping.zip https://roboshop-builds.s3.amazonaws.com/shipping.zip
+cd /app
+unzip -o /tmp/shipping.zip
+mvn clean package
+mv target/shipping-1.0.jar shipping.jar
+cp /home/centos/roboshop-shellscript/shipping.service /etc/systemd/system/shipping.service
+systemctl daemon-reload
+systemctl enable shipping
+systemctl start shipping
+dnf install mysql -y
+mysql -h mysql.daws80.online -uroot -pRoboShop@1 < /app/schema/shipping.sql
+systemctl restart shipping
