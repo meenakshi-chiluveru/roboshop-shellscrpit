@@ -39,9 +39,12 @@ dnf install mysql-community-server -y &>> LOGFILE
 VALIDATE $? "installing mysql repo"
 
 systemctl enable mysqld
+VALIDATE $? "enabling mysql server"
 
 systemctl start mysqld
+VALIDATE $? "start mysqld"
 
 mysql_secure_installation --set-root-pass RoboShop@1
+VALIDATE $? "setting mysql root password"
 
 mysql -uroot -pRoboShop@1
