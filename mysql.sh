@@ -38,13 +38,13 @@ VALIDATE $? "copying mysql repo"
 dnf install mysql-community-server -y &>> LOGFILE
 VALIDATE $? "installing mysql repo"
 
-systemctl enable mysqld
+systemctl enable mysqld &>> LOGFILE
 VALIDATE $? "enabling mysql server"
 
-systemctl start mysqld
+systemctl start mysqld &>> LOGFILE
 VALIDATE $? "start mysqld"
 
-mysql_secure_installation --set-root-pass RoboShop@1
+mysql_secure_installation --set-root-pass RoboShop@1 &>> LOGFILE
 VALIDATE $? "setting mysql root password"
 
-mysql -uroot -pRoboShop@1
+
